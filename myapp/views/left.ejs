@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>后台管理系统</title>
+  <!-- <link rel="stylesheet" href="/stylesheets/style.css"> -->
+  <link rel="stylesheet" href="/stylesheets/common.css">
+  <style>
+    .nav-left h3 img{
+      margin-top: -40px;
+      margin-left: -20px;
+      width: 200px;
+      height: auto;
+    }
+    ul{
+      list-style: none;
+      cursor: pointer;
+    }
+    a,span{
+      color: #fff;
+    }
+    .nav-left h3{
+      padding: 40px;
+    }
+
+    .nav-left ul{
+      padding:0 16px;
+    }
+
+    .nav-left > ul > li{
+      padding: 20px 0;
+      border-top: 2px solid pink;
+    }
+
+    .nav-left > ul > li:first-child{
+      border-top: none;
+    }
+
+    .menu{
+      position: relative;
+      margin: 0 20px;
+      line-height: 40px;
+      color: #fff;
+      border-radius: 24px;
+    }
+
+    .menu.active{
+      background: rgb(250, 168, 180);
+    }
+
+    .menu > img:first-child{
+      margin: -2px 18px;
+    }
+    .menu > img:last-child{
+      position: absolute;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      margin: 0 18px;
+    }
+
+    .nav-left >ul > li > ul >li{
+      margin-top: 20px;
+    }
+
+    .out{
+      position: fixed;
+      bottom: 16px;
+      width: 80%;
+      height: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      line-height: 40px;
+      text-align: center;
+      color: #fff;
+      background-color: rgb(250, 168, 180);
+      border-radius: 12px;
+      cursor: pointer;
+    }
+  </style>
+
+  <audio id="music-id" src="/music/02 Ohayou Sayori!.mp3" 
+  controls="controls"
+  autoplay="autoplay" loop="loop" style="display: none;"> 
+    你的浏览器不兼容
+  </audio>
+
+</head>
+
+<body>
+  <div class="nav-left">
+    <h3>
+      <img src="/images/透明底Logo.png" alt="">
+    </h3>
+    
+    <ul>
+      <!-- 一级导航 -->
+      <li>
+        <div class="menu active">
+          <img src="/images/后台管理UI素材/切图/icon_shouye.png" alt="">
+          <span>首页</span>
+          <img src="/images/后台管理UI素材/切图/icon_down.png" class="down" alt="">
+        </div>
+        <ul>
+          <li class="menu">
+            <img src="/images/后台管理UI素材/切图/icon_kecheng.png" alt="">
+            <a href="/user" target="right">个人页面</a>
+          </li>
+          <li class="menu">
+            <img src="/images/后台管理UI素材/切图/icon_class.png" alt="">
+            <a href="/studentCourse" target="right">学生选课</a>
+          </li>
+          <li class="menu">
+            <img src="/images/后台管理UI素材/切图/icon_banner.png" alt="">
+            <a href="/teacherCourse" target="right">排课安排</a>
+          </li>
+          
+        </ul>
+      </li>
+
+      <!-- 一级导航 -->
+      <li>
+        <div class="menu">
+          <img src="/images/后台管理UI素材/切图/icon_jiuye.png" alt="">
+          <span>成绩相关</span>
+          <img src="/images/后台管理UI素材/切图/icon_you_s.png" class="down" alt="">
+        </div>
+        <ul>
+          <li class="menu">
+            <img src="/images/后台管理UI素材/切图/icon_kecheng.png" alt="">
+            <a href="/studentGrade" target="right">学生学籍</a>
+          </li>
+          <li class="menu">
+            <img src="/images/后台管理UI素材/切图/icon_kecheng.png" alt="">
+            <a href="/studentGPA" target="right">学生绩点</a>
+          </li>
+          <li class="menu">
+            <img src="/images/后台管理UI素材/切图/icon_class.png" alt="">
+            <a href="/classGrade" target="right">班级成绩</a>
+          </li>
+          <li class="menu">
+            <img src="/images/后台管理UI素材/切图/icon_banner.png" alt="">
+            <a href="/courseGrade" target="right">课程成绩</a>
+          </li>
+        </ul>
+      </li>
+
+      <li>
+        <div class="menu">
+          <img src="/images/后台管理UI素材/切图/icon_women.png" alt="">
+          <span>信息管理</span>
+          <img src="/images/后台管理UI素材/切图/icon_you_s.png" class="down" alt="">
+        </div>
+        <ul>
+          <li class="menu">
+            <img src="/images/后台管理UI素材/切图/icon_kecheng.png" alt="">
+            <a href="/student" target="right">学生信息</a>
+          </li>
+          <li class="menu">
+            <img src="/images/后台管理UI素材/切图/icon_class.png" alt="">
+            <a href="/course" target="right">课程信息</a>
+          </li>
+          <li class="menu">
+            <img src="/images/后台管理UI素材/切图/icon_banner.png" alt="">
+            <a href="/teacher" target="right">教师信息</a>
+          </li>
+        </ul>
+      </li>
+
+    </ul>
+    
+    <div class="out">
+      <a href="/admin" target="_parent">退出登录</a>
+    </div>
+  </div>
+
+  <script src="/javascripts/jquery.js"></script>
+  <script>
+    $(function(){
+      $('.nav-left > ul >li').click(function(){
+        //添加一级菜单样式
+        $(this).siblings().find('div.menu').removeClass('active');
+        $(this).find('div.menu').addClass('active');
+
+        //更换箭头
+        $(this).siblings().find('.down').attr('src','/images/后台管理UI素材/切图/icon_you_s.png');
+        $(this).find('.down').attr('src','/images/后台管理UI素材/切图/icon_down.png');
+
+        //展开收起
+        $(this).siblings().find('ul').slideUp(200);
+        $(this).find('ul').slideDown(200);
+      })
+    })
+
+    function toggleSound(){
+    let music = document.getElementById("music-id");
+    if(music.paused){
+      music.paused = false;
+      music.play();
+    }
+  }
+  setInterval("toggleSound()",1);
+  </script>
+</body>
+</html>
+

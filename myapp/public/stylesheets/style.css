@@ -1,0 +1,70 @@
+.container{
+  width: 100vw;
+  height: 100vh;
+  color: #fff;
+  background: url("/images/ddlc.jpg") no-repeat;
+  background-size: 100% 100%;
+  overflow: hidden;
+}
+
+header{
+  display: flex;
+  justify-content: space-between;
+  padding: 40px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+header h1 img{
+  margin-top: -80px;
+  margin-left: -20px;
+  width: 200px;
+  height: auto;
+}
+
+form{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%,50%);
+}
+
+form .form-group + .form-group{
+  margin-top: 20px;
+}
+
+form .form-group{
+  display: flex;
+  justify-content: space-between;
+}
+
+form input{
+  width: 318px;
+  padding: 0 10px;
+  height: 40px;
+  margin-left: 20px;
+  border-radius: 12px;
+}
+
+form label{
+  color: rgb(171, 92, 82);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 40px;
+}
+
+form input[type=submit]{
+  width: 100%;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 500;
+  background: rgb(255, 185, 195);
+  line-height: 40px;
+  border-radius: 12px;
+  margin-top: 32px;
+}
+
+input[type="radio"]{
+  width: 50px;
+}

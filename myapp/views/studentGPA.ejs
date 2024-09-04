@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>后台管理系统</title>
+  
+  <link rel="stylesheet" href="/stylesheets/common.css">
+  <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+  <style>
+    
+    .container{
+      width: 100vw;
+      height: 100vh;
+      background-color: rgb(250, 168, 180);
+      overflow: hidden;
+    }
+
+    .main{
+      padding: 20px 30px;
+      overflow: hidden;
+    }
+
+    .select{
+      display: flex;
+      justify-content: space-between;
+      padding: 20px 30px;
+      background: rgb(221, 120, 252);
+      border-radius: 24px;
+    }
+    
+    .select form{
+      display: flex;
+    }
+
+    .select select{
+      padding: 0 20px;
+      width: 350px;
+      height: 40px;
+      color: #999999;
+      background-color: #fff;
+      border-radius: 12px;
+      border: 0;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .select form > div{
+      margin: 0;
+    }
+
+    .select .search{
+      display: flex;
+      width: 560px;
+      height: 40px;
+      border-radius: 12px;
+      margin-left: 15px;
+      overflow: hidden;
+    }
+
+    .select .search input{
+      padding: 0 10px;
+      flex: 1;
+    }
+
+    .select .search .search-btn{
+      display: flex;
+      justify-content: center;
+      align-content: center;
+      width: 45px;
+      height: 40px;
+      background-color: rgb(250, 168, 180);
+      cursor: pointer;
+    }
+
+    .select .search .search-btn img{
+      margin-top: 10px;
+      width: 25px;
+      height: 25px;
+    }
+
+    .select button.add-btn{
+      width: 70px;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+      color: #fff;
+      background-color: rgb(250, 168, 180);
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    .content{
+      margin-top: 30px;
+      background: rgb(221, 120, 252);
+      border-radius: 24px;
+    }
+
+    .table{
+      width: 100%;
+      color: #fff;
+      text-align: center;
+    }
+
+    .table thead tr{
+      height: 64px;
+    }
+
+    .table th{
+      text-align: center;
+    }
+
+    .table tbody tr td{
+      line-height: 48px;
+    }
+
+    form > div{
+      margin: 20px 0;
+    }
+    
+
+    .page{
+      width: 100%;
+      padding: 20px;
+      color: #fff;
+      border-top: 1px solid #ccc;
+    }
+
+    .page ul li{
+      margin-top: 6px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="main">
+      <% if(user.userType=='teacher' || user.userType=='admin'){ %>
+      <div class="select">
+        <form action="/likeStuGPA" method="get" id="myform">
+          <select onchange="submitForm()" name="selectVal">
+            <option value="请选择">请选择</option>
+            <% Class.forEach(function(item) { %>
+              <option value="<%= item.class %>"> <%= item.class %></option>
+            <% }) %> 
+          </select>
+          <div class="search">
+            <input type="text" name="likeStuGPA">
+            <button class="search-btn">
+              <img src="/images/后台管理UI素材/切图/放大镜.png" alt="">
+            </button>
+          </div>
+        </form>
+      </div>
+      <% } %>
+      <div class="content">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>学号</th>
+              <th>姓名</th>
+              <th>班级</th>
+              <th>平均成绩</th>
+              <th>绩点</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% studentGPA.forEach(function(item) { %>
+              <tr>
+                <td><%= item.sno %></td>
+                <td><%= item.name %></td>
+                <td><%= item.class %></td>
+                <td><%= parseFloat(item.avg_course_grade).toFixed(2) %></td>
+                <td><%= parseFloat(item.student_gpa).toFixed(2) %> </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+        
+        <div class="page">
+          <ul class="pagination">
+            <% let prevNum=10; let nextNum=10; %>
+            <li class="disabled"><a href="javascript:;">共<%= pager.maxNum %>条</a></li>
+            <li><a href="javascript:;">共<%= pager.maxNum %>条</a></li>
+            
+            <li class="disabled"><a href="javascript:;">共<%= pager.pageCount %>页</a></li>
+
+            <!-- 首页 -->
+            <% if(pager.maxNum==0) {%>
+              <li class="disabled"><a href="javascript:;"> 首页 </a></li>
+            <% }else{ %>
+              <li><a href="/studentGPA?page=1"> 首页 </a></li>
+            <% } %>
+
+            <!-- 上一页 -->
+            <% if(pager.pageCurrent==1){ %>
+              <li class="disabled"><a href="javascript:;">上一页</a></li>
+            <% }else{ %>
+              <li><a href="/studentGPA?page=<%= parseInt(pager.pageCurrent)-1 %>">上一页</a></li>
+            <% } %>
+
+            <!-- 直接点数字 -->
+            <!-- 循环显示页码 开始 -->
+            <% for(let i=prevNum; i>0; i--){ %>
+              <% if(parseInt(pager.pageCurrent)-i > 0) { %>
+              <li><a href="/studentGPA?page=<%= parseInt(pager.pageCurrent)-i %>"><%= parseInt(pager.pageCurrent)-i %></a></li>
+            <% }} %>
+            <li class="active"><a href="/studentGPA?page=<%= parseInt(pager.pageCurrent) %>"><%= parseInt(pager.pageCurrent) %></a></li>
+            <% for(let i=1;i<=nextNum;i++){ %>
+              <% if(parseInt(pager.pageCurrent)+i <= pager.pageCount){ %>
+              <li><a href="/studentGPA?page=<%= parseInt(pager.pageCurrent)+i %>"><%= parseInt(pager.pageCurrent)+i %></a></li>
+            <% }} %>
+            <!-- 循环显示页码 结束 -->
+
+            <!-- 下一页 -->
+            <% if(pager.pageCurrent==pager.pageCount){ %>
+              <li class="disabled"><a href="javascript:;">下一页</a></li>
+            <% }else{ %>
+              <li><a href="/studentGPA?page=<%= parseInt(pager.pageCurrent)+1 %>">下一页</a></li>
+            <% } %>
+
+            <!-- 尾页 -->
+            <% if(pager.maxNum==0) {%>
+              <li class="disabled"><a href="javascript:;"> 尾页 </a></li>
+            <% }else{ %>
+              <li><a href="/studentGPA?page=<%= pager.pageCount %>"> 尾页 </a></li>
+            <% } %>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  
+
+  <script src="/javascripts/jquery.js"></script>
+  <script>
+    //触发提交form表单
+    function submitForm(){
+      let form = document.getElementById('myform');
+      form.submit();
+    }
+  </script>
+</body>
+</html>

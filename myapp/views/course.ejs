@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>后台管理系统</title>
+  
+  <link rel="stylesheet" href="/stylesheets/common.css">
+  <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+  <style>
+    
+    .container{
+      width: 100vw;
+      height: 100vh;
+      background-color: rgb(250, 168, 180);
+      overflow: hidden;
+    }
+
+    .main{
+      padding: 20px 30px;
+      overflow: hidden;
+    }
+
+    .select{
+      display: flex;
+      justify-content: space-between;
+      padding: 20px 30px;
+      background: rgb(221, 120, 252);
+      border-radius: 24px;
+    }
+    
+    .select form{
+      display: flex;
+    }
+
+    .select select{
+      padding: 0 20px;
+      width: 350px;
+      height: 40px;
+      color: #999999;
+      background-color: #fff;
+      border-radius: 12px;
+      border: 0;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .select form > div{
+      margin: 0;
+    }
+
+    .select .search{
+      display: flex;
+      width: 560px;
+      height: 40px;
+      border-radius: 12px;
+      margin-left: 15px;
+      overflow: hidden;
+    }
+
+    .select .search input{
+      padding: 0 10px;
+      flex: 1;
+    }
+
+    .select .search .search-btn{
+      display: flex;
+      justify-content: center;
+      align-content: center;
+      width: 45px;
+      height: 40px;
+      background-color: rgb(250, 168, 180);
+      cursor: pointer;
+    }
+
+    .select .search .search-btn img{
+      margin-top: 10px;
+      width: 25px;
+      height: 25px;
+    }
+
+    .select button.add-btn{
+      width: 70px;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+      color: #fff;
+      background-color: rgb(250, 168, 180);
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    .content{
+      margin-top: 30px;
+      background: rgb(221, 120, 252);
+      border-radius: 24px;
+    }
+
+    .table{
+      width: 100%;
+      color: #fff;
+      text-align: center;
+    }
+
+    .table thead tr{
+      height: 64px;
+    }
+
+    .table th{
+      text-align: center;
+    }
+
+    .table tbody tr td{
+      line-height: 48px;
+    }
+
+    .dialog{
+      position: fixed;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #000;
+      opacity: 0;
+    }
+
+    .dialog-wrap{
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 999;
+      padding: 20px;
+      width: 460px;
+      margin-left:-120px;
+      background: #fff;
+      border-radius: 24px;
+      transform: translate(-50%,-50%);
+    }
+
+    .dialog-header{
+      position: relative;
+    }
+
+    .dialog-header > div{
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+    form > div{
+      margin: 20px 0;
+    }
+    .dialog-footer{
+      text-align: right;
+    }
+    .dialog-footer button,.dialog-footer span{
+      display: inline-block;
+      padding: 6px 10px;
+      color: #fff;
+      background: rgb(250, 168, 180);
+    }
+    
+
+    .page{
+      width: 100%;
+      padding: 20px;
+      color: #fff;
+      border-top: 1px solid #ccc;
+    }
+
+    .page ul li{
+      margin-top: 6px;
+    }
+
+    .isDialog{
+      display: none;
+    }
+
+    .isDelete{
+      display: none;
+    }
+
+    .close,.cancel,.delete-item,.edit{
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="main">
+      
+      <div class="select">
+        <form action="/likeCourse" method="get" id="myform">
+          <select onchange="submitForm()" name="selectVal">
+            <option value="请选择">请选择</option>
+            <% serachData.forEach(function(item) { %>
+              <option value="<%= item.name %>"> <%= item.name %></option>
+            <% }) %> 
+          </select>
+          <div class="search">
+            <input type="text" name="likeCourse">
+            <button class="search-btn">
+              <img src="/images/后台管理UI素材/切图/放大镜.png" alt="">
+            </button>
+          </div>
+        </form>
+        <button id="addBtn" class="add-btn">添加</button>
+      </div>
+      
+      <div class="content">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>课程号</th>
+              <th>课程名</th>
+              <th>学分</th>
+              <th>开始时间</th>
+              <th>结束时间</th>
+              <th>录用截至时间</th>
+              <th>最大选课人数</th>
+              <% if(user.userType == 'admin'){ %>
+                <th>操作</th>
+              <% } %>
+            </tr>
+          </thead>
+          <tbody>
+            <% course.forEach(function(item) { %>
+              <tr>
+                <td><%= item.cno %></td>
+                <td><%= item.name %></td>
+                <td><%= item.grades %></td>
+                <td><%= item.startTime.toISOString().slice(0, 10) %> </td>
+                <td><%= item.endTime.toISOString().slice(0, 10) %></td>
+                <td><%= item.enrollTime.toISOString().slice(0, 10) %></td>
+                <td><%= item.MAXNUM %></td>
+                <td>
+                  <% if(user.userType == 'admin'){ %>
+                    <img src="/images/后台管理UI素材/切图/btn_chakan.png" class="edit update" 
+                    data-cno="<%= item.cno %>" 
+                    data-name="<%= item.name %>"
+                    data-grades="<%= item.grades %>"
+                    data-stime="<%= item.startTime.toISOString().slice(0, 10) %>"
+                    data-etime="<%= item.endTime.toISOString().slice(0, 10) %>"
+                    data-enrolltime="<%= item.enrollTime.toISOString().slice(0, 10) %>"
+                    data-maxnum = "<%= item.MAXNUM %>"
+                    >
+                    <img src="/images/后台管理UI素材/切图/btn_shanchu.png" alt="del" class="delete-item" data-cno="<%= item.cno %>">
+                  <% } %>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+        
+        <div class="page">
+          <ul class="pagination">
+            <% let prevNum=10; let nextNum=10; %>
+            <li class="disabled"><a href="javascript:;">共<%= pager.maxNum %>条</a></li>
+            <li><a href="javascript:;">共<%= pager.maxNum %>条</a></li>
+            
+            <li class="disabled"><a href="javascript:;">共<%= pager.pageCount %>页</a></li>
+
+            <!-- 首页 -->
+            <% if(pager.maxNum==0) {%>
+              <li class="disabled"><a href="javascript:;"> 首页 </a></li>
+            <% }else{ %>
+              <li><a href="/course?page=1"> 首页 </a></li>
+            <% } %>
+
+            <!-- 上一页 -->
+            <% if(pager.pageCurrent==1){ %>
+              <li class="disabled"><a href="javascript:;">上一页</a></li>
+            <% }else{ %>
+              <li><a href="/course?page=<%= parseInt(pager.pageCurrent)-1 %>">上一页</a></li>
+            <% } %>
+
+            <!-- 直接点数字 -->
+            <!-- 循环显示页码 开始 -->
+            <% for(let i=prevNum; i>0; i--){ %>
+              <% if(parseInt(pager.pageCurrent)-i > 0) { %>
+              <li><a href="/course?page=<%= parseInt(pager.pageCurrent)-i %>"><%= parseInt(pager.pageCurrent)-i %></a></li>
+            <% }} %>
+            <li class="active"><a href="/course?page=<%= parseInt(pager.pageCurrent) %>"><%= parseInt(pager.pageCurrent) %></a></li>
+            <% for(let i=1;i<=nextNum;i++){ %>
+              <% if(parseInt(pager.pageCurrent)+i <= pager.pageCount){ %>
+              <li><a href="/course?page=<%= parseInt(pager.pageCurrent)+i %>"><%= parseInt(pager.pageCurrent)+i %></a></li>
+            <% }} %>
+            <!-- 循环显示页码 结束 -->
+
+            <!-- 下一页 -->
+            <% if(pager.pageCurrent==pager.pageCount){ %>
+              <li class="disabled"><a href="javascript:;">下一页</a></li>
+            <% }else{ %>
+              <li><a href="/course?page=<%= parseInt(pager.pageCurrent)+1 %>">下一页</a></li>
+            <% } %>
+
+            <!-- 尾页 -->
+            <% if(pager.maxNum==0) {%>
+              <li class="disabled"><a href="javascript:;"> 尾页 </a></li>
+            <% }else{ %>
+              <li><a href="/course?page=<%= pager.pageCount %>"> 尾页 </a></li>
+            <% } %>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 添加操作 -->
+  <div class="dialog isDialog"></div>
+  <div class="dialog-wrap isDialog">
+    <div class="dialog-header">
+      <h3>添加课程信息</h3>
+      <div class="close">
+        <img src="/images/后台管理UI素材/切图/icon_guanbi.png" alt="">
+      </div>
+    </div>
+    <form action="/addCourse" enctype="multipart/form-data" method="post">
+      <div>
+        <p class="sc_select">
+          <label for="">课程号：</label>
+          <input type="text" name="cno" placeholder="请输入课程号" required>
+        </p>
+        <p class="sc_select">
+          <label for="">课程名：</label>
+          <input type="text" name="name" placeholder="请输入课程名" required>
+        </p>
+        
+        <p class="sc_select">
+          <label for="">学分：</label>
+          <input type="text" name="grades" placeholder="请输入课程学分" required>
+        </p>
+        <p class="sc_select">
+          <label for="">开始时间：</label>
+          <input type="text" id="date-input" name="stime" placeholder="YYYY-MM-DD" pattern="\d{4}-\d{2}-\d{2}" title="Please enter the date in the format YYYY-MM-DD" required>
+        </p>
+        <p class="sc_select">
+          <label for="">结束时间：</label>
+          <input type="text" id="date-input" name="etime" placeholder="YYYY-MM-DD" pattern="\d{4}-\d{2}-\d{2}" title="Please enter the date in the format YYYY-MM-DD" required>
+        </p>
+        <p class="sc_select">
+          <label for="">成绩截止时间：</label>
+          <input type="text" id="date-input" name="enrollTime" placeholder="YYYY-MM-DD" pattern="\d{4}-\d{2}-\d{2}" title="Please enter the date in the format YYYY-MM-DD" required>
+        </p>
+        <p class="sc_select">
+          <label for="">最大选课人数：</label>
+          <input type="text" name="maxnum" placeholder="请输入最大选课人数" required>
+        </p>
+      </div>
+      <div class="dialog-footer">
+        <span class="cancel">取消</span>
+        <button class="determine">确定</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="dialog isDelete"></div>
+  <div class="dialog-wrap isDelete">
+    <div class="dialog-header">
+      <h3>是否确认删除该课程信息</h3>
+      <div class="close">
+        <img src="/images/后台管理UI素材/切图/icon_guanbi.png" alt="">
+      </div>
+    </div>
+    <div class="dialog-footer">
+      <span class="cancel">取消</span>
+      <button class="determine determineDel">确定</button>
+    </div>
+  </div>
+
+  <script src="/javascripts/jquery.js"></script>
+  <script>
+    
+    let cno = '';
+    let updateHtml = '';
+    const userType = '<%= user.userType %>'
+    const addBtn = document.getElementById('addBtn');
+
+    if(userType == 'student' || userType == 'teacher'){
+      addBtn.style.display = 'none';
+    }else{
+      addBtn.style.display = 'inline-block';
+    }
+    
+    //触发提交form表单
+    function submitForm(){
+      let form = document.getElementById('myform');
+      form.submit();
+    }
+
+    $(function(){
+      //显示
+      $('#addBtn').click(function(){
+        $('.isDialog').show();
+      })
+      //隐藏增加
+      $('.close, .cancel').click(function(){
+        $('.isDialog').hide();
+      })
+
+      //点击删除按钮
+      $('.delete-item').click(function(){
+        cno = $(this).data('cno');
+        // console.log(tno);
+        $('.isDelete').show();
+      })
+      //隐藏删除
+      $('.close,.cancel').click(function(){
+        $('.isDelete').hide();
+      })
+      //点击确认删除
+      $('.determineDel').click(function(){
+        window.location.href = `/delCourse?cno=${cno}`;
+      })
+
+      //点击修改数据
+      $('.update').click(function(){
+        let updateCno = $(this).data('cno');
+        let updateName = $(this).data('name');
+        let updateGrades = $(this).data('grades');
+        let updateStime = $(this).data('stime');
+        let updateEtime = $(this).data('etime');
+        let updateEnrollTime = $(this).data('enrolltime');
+        let updateMaxnum = $(this).data('maxnum')
+        
+        updateHtml = `
+        <div class="dialog isUpdate"></div>
+        <div class="dialog-wrap isUpdate">
+          <div class="dialog-header">
+            <h3>修改课程信息</h3>
+            <div class="close">
+              <img src="/images/后台管理UI素材/切图/icon_guanbi.png" alt="">
+            </div>
+          </div>
+          <form action="/updateCourse" enctype="multipart/form-data" method="post">
+            <div>
+              <input type="hidden" name="upCno" value="${updateCno}">
+              <p class="sc_select">
+                <label for="">课程号：</label>
+                <input type="text" name="cno" value="${updateCno}" placeholder="请输入课程号" required>
+              </p>
+              <p class="sc_select">
+                <label for="">课程名：</label>
+                <input type="text" name="name" value="${updateName}" placeholder="请输入课程名" required>
+              </p>
+
+              <p class="sc_select">
+                <label for="">学分：</label>
+                <input type="text" name="grades" value="${updateGrades}" placeholder="请输入课程学分" required>
+              </p>
+              <p class="sc_select">
+                <label for="">开始时间：</label>
+                <input type="text" id="date-input" value="${updateStime}" name="stime" placeholder="YYYY-MM-DD" title="Please enter the date in the format YYYY-MM-DD" required>
+              </p>
+              <p class="sc_select">
+                <label for="">结束时间：</label>
+                <input type="text" id="date-input" value="${updateEtime}" name="etime" placeholder="YYYY-MM-DD" title="Please enter the date in the format YYYY-MM-DD" required>
+              </p>
+              <p class="sc_select">
+                <label for="">成绩截止时间：</label>
+                <input type="text" id="date-input" value="${updateEnrollTime}" name="enrollTime" placeholder="YYYY-MM-DD" title="Please enter the date in the format YYYY-MM-DD" required>
+              </p>
+              <p class="sc_select">
+                <label for="">最大选课人数：</label>
+                <input type="text" name="maxnum" value="${updateMaxnum}" placeholder="请输入最大选课人数" required>
+              </p>
+            </div>
+            <div class="dialog-footer">
+              <span class="cancel">取消</span>
+              <button class="determine">确定</button>
+            </div>
+          </form>
+        </div>
+        `
+        $('body').append(updateHtml);
+      })
+      //隐藏修改
+      $('body').on('click','.close,.cancel',function(){
+        $('.isUpdate').hide();
+      })
+    })
+  </script>
+</body>
+</html>

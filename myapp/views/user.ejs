@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>个人信息</title>
+  <link rel="stylesheet" href="/stylesheets/common.css">
+  <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+  <style>
+    /* body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    } */
+
+    h1 {
+      text-align: center;
+    }
+
+    .container{
+      width: 100vw;
+      height: 100vh;
+      background-color: rgb(250, 168, 180);
+      overflow: hidden;
+    }
+
+    .main{
+      padding: 20px 30px;
+      overflow: hidden;
+    }
+
+    .user{
+      color: #fff;
+      text-align: center;
+      margin: 0 auto;
+      width: 800px;
+      justify-content: space-between;
+      padding: 20px 30px;
+      background-color: rgb(221,120,252);
+      border-radius: 24px;
+    }
+
+    .content {
+      background-color: rgb(221,120,252);
+      max-width: 800px;
+      margin: 0 auto;
+      margin-top: 50px;
+      padding: 20px;
+
+      /* border: 1px solid #fff; */
+      border-radius: 24px;
+      color: #fff;
+    }
+
+    .content .my-table{
+      text-align: center;
+      border: 1px solid #fff;
+      border-radius: 24px;
+      width: 100%;
+      height: 500px;
+    }
+
+    .content .my-table td{
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    .my-table img {
+      max-width: 200px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  
+  
+
+  <div class="container">
+    <div class="main">
+      <div class="user"><h3>用户个人信息</h3></div>
+      <div class="content">
+        <table border="1" class="my-table" cellspacing="0" cellpadding="0">
+          
+          <tr>
+              <td>用户id: <%= user.userid %></td>
+              <td>用户名: <%= user.userName %></td>
+              <% if(user.userType=='student'){ %>
+                <td>用户类型：学生</td>
+              <% }else if(user.userType=='teacher'){ %>
+                <td>用户类型：教师</td>
+              <% }else{ %>
+                <td>用户类型：教务人员</td>
+              <% } %>
+              <!-- <td>用户类型: <%= user.userType %></td> -->
+              <td rowspan="2">
+                <!-- <img src="images/优里吓人.jpg" alt=""> -->
+                 <img src="images/死二.jpg" alt="">
+              </td>
+          </tr>
+          <tr>
+              <% if(user.userType=='student'){ %>
+                <td>学生号：<%= user.personNo %></td>
+              <% }else if(user.userType=='teacher'){ %>
+                <td>教师号：<%= user.personNo %></td>
+              <% }else{ %>
+                <td>教务号：<%= user.personNo %></td>
+              <% } %>
+              <td>姓名: <%= user.personName %></td>
+              <td>院系：电信学院</td>
+              <!-- <td>婚姻：未婚</td> -->
+          </tr>
+          <tr>
+              <td>性别：<%= user.personGender %></td>
+              <td>年龄: 24</td>
+              <td colspan="2">电子邮箱: 3240912086@qq.com</td>
+          </tr>
+          <tr>
+              <td>关于更多</td>
+              <td colspan="3">待完善~</td>
+          </tr>
+      </table>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

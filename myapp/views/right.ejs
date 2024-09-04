@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>后台管理系统</title>
+  
+  <link rel="stylesheet" href="/stylesheets/common.css">
+  
+  <style>
+    body{
+      background: rgb(250, 168, 180);
+    }
+    .main{
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%,-50%);
+      /* color: rgb(221, 120, 252); */
+      color: #fff;
+      text-align: center;
+
+    }
+
+    img{
+      width: 385px;
+      height: 325px;
+    }
+    /* img{
+      width: 800px;
+      height: 448px;
+    } */
+  
+  @keyframes play {
+    100% { background-position: -100%; }
+  }
+  </style>
+
+  <audio id="music-id" src="/music/02 Ohayou Sayori!.mp3" 
+  controls="controls"
+  autoplay="autoplay" loop="loop" style="display: none;"> 
+    你的浏览器不兼容
+  </audio>
+</head>
+
+<body>
+  <div class="main">
+    <!-- <img src="/images/sha.gif"> -->
+     <img src="/images/Sayori_sun.jpg" alt="">
+    <h1>欢迎进入学生成绩管理系统</h1>
+    
+  </div>
+</body>
+
+<script>
+  function toggleSound(){
+    let music = document.getElementById("music-id");
+    if(music.paused){
+      music.paused = false;
+      music.play();
+    }
+  }
+  setInterval("toggleSound()",1);
+</script>
+
+</html>
+
